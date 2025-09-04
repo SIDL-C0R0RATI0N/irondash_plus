@@ -3,7 +3,7 @@ use std::fmt::Display;
 #[derive(Debug)]
 pub enum Error {
     /// Engine for this handle does not exist.
-    EngineContextError(irondash_engine_context::Error),
+    EngineContextError(irondash_plus_engine_context::Error),
     TextureRegistrationFailed,
     #[cfg(target_os = "android")]
     JNIError(jni::errors::Error),
@@ -22,8 +22,8 @@ impl Display for Error {
 
 impl std::error::Error for Error {}
 
-impl From<irondash_engine_context::Error> for Error {
-    fn from(err: irondash_engine_context::Error) -> Self {
+impl From<irondash_plus_engine_context::Error> for Error {
+    fn from(err: irondash_plus_engine_context::Error) -> Self {
         Error::EngineContextError(err)
     }
 }

@@ -1,17 +1,17 @@
 [package]
-name = "irondash_run_loop"
+name = "irondash_plus_run_loop"
 version = "0.6.0"
 edition = "2021"
 license = "MIT"
 description = "Consistent, platform-independent interface to system run loop."
-authors = ["Matej Knopp <matej.knopp@gmail.com>"]
-repository = "https://github.com/irondash/irondash"
+authors = ["SIDL CORPORATION <contact@sid-corporation.fr>"]
+repository = "https://github.com/SIDL-C0R0RATI0N/irondash_plus"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
 futures = { version = "0.3.17", default-features = false, features = ["std"] }
-irondash_engine_context = { version = "0.5.0" }
+irondash_plus_engine_context = { version = "0.5.0" }
 once_cell = "1.16.0"
 
 [target.'cfg(any(target_os = "macos", target_os = "ios"))'.dependencies]

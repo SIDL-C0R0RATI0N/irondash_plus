@@ -1,6 +1,6 @@
 [package]
-name = "irondash_message_channel_derive"
-authors = ["Matej Knopp <matej.knopp@gmail.com>"]
+name = "irondash_plus_message_channel_derive"
+authors = ["SIDL CORPORATION <contact@sid-corporation.fr>"]
 version = "0.1.1"
 edition = "2021"
 license = "MIT OR Apache-2.0"
