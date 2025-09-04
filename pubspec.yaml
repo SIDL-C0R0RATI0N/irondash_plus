@@ -1,4 +1,7 @@
 name: irondash_workspace
+version: 0.5.7
+description: Official irondash workspace
+repository: https://github.com/SIDL-C0R0RATI0N/irondash_plus
 
 environment:
   sdk: '>=3.0.0 <4.0.0'

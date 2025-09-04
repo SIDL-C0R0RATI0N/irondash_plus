@@ -3,18 +3,30 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
-## 2023-08-23
+## [0.5.7] - 2024-12-03
 
-### Changes
+### Added
+- Package maintenance and version alignment
+- Improved package documentation
+
+### Changed
+- Updated package metadata for pub.dev compliance
+- Enhanced repository configuration
+
+### Fixed
+- Resolved version numbering issues
+- Fixed package validation requirements
 
 ---
 
-Packages with breaking changes:
+## [0.5.6] - 2023-08-23
 
+### Changes
+
+Packages with breaking changes:
  - There are no breaking changes in this release.
 
 Packages with other changes:
-
  - [`irondash_engine_context` - `v0.3.1`](#irondash_engine_context---v031)
  - [`irondash_message_channel` - `v0.3.1`](#irondash_message_channel---v031)
 
@@ -22,7 +34,7 @@ Packages with other changes:
 
 #### `irondash_engine_context` - `v0.3.1`
 
- - **FEAT**: upgrade to dart 3.0  (#24).
+ - **FEAT**: upgrade to dart 3.0 (#24).
 
 #### `irondash_message_channel` - `v0.3.1`
 
@@ -30,21 +42,18 @@ Packages with other changes:
  - **FIX**: re-enable rust-tls on android.
  - **FIX**: potential leak on Error during serialization (#19).
  - **FEAT**: upgrade JNI to 0.21.1 (#26).
- - **FEAT**: upgrade to dart 3.0  (#24).
-
-
-## 2023-03-29
-
-### Changes
+ - **FEAT**: upgrade to dart 3.0 (#24).
 
 ---
 
-Packages with breaking changes:
+## [0.1.1] - 2023-03-29
 
+### Changes
+
+Packages with breaking changes:
  - There are no breaking changes in this release.
 
 Packages with other changes:
-
  - [`irondash_engine_context` - `v0.1.1`](#irondash_engine_context---v011)
  - [`irondash_message_channel` - `v0.1.1`](#irondash_message_channel---v011)
 
@@ -75,3 +84,11 @@ Packages with other changes:
  - **DOCS**: add license symlinks.
  - **DOCS**: move license to root.
 
+---
+
+## [0.1.0] - Initial Release
+
+### Added
+- Initial project setup
+- Core irondash functionality
+- Basic Flutter plugin structure
