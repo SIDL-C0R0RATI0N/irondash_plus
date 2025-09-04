@@ -1,4 +1,4 @@
-# irondash_engine_context
+# irondash_plus_engine_context
 
 Flutter plugin that provides access to Flutter engine components (like view or texture registrar) from native code.
 
@@ -6,7 +6,7 @@ Flutter plugin that provides access to Flutter engine components (like view or t
 
 Dart code:
 ```dart
-    import 'package:irondash_engine_context/irondash_engine_context.dart';
+    import 'package:irondash_plus_engine_context/irondash_plus_engine_context.dart';
 
     final handle = await EngineContext.instance.getEngineHandle();
     // pass the handle native code (i.e. through FFI).
@@ -15,7 +15,7 @@ Dart code:
 
 Rust code:
 ```rust
-    use irondash_engine_context::EngineContext;
+    use irondash_plus_engine_context::EngineContext;
 
     let context = EngineContext::get().unwrap();
     let flutter_view = context.get_flutter_view(handle);

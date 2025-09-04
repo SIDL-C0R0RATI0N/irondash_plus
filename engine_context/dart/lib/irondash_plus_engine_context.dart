@@ -1,14 +1,14 @@
 import 'package:flutter/services.dart';
 
-class EngineContext {
-  /// Shared instance for [EngineContext].
-  static final instance = EngineContext();
+class IrondashPlusEngineContext {
+  /// Shared instance for [IrondashPlusEngineContext].
+  static final instance = IrondashPlusEngineContext();
 
   // this must match EngineContext::check_version.
   static const _version = 4;
   static const _versionShift = 48;
 
-  final _methodChannel = const MethodChannel('dev.irondash.engine_context');
+  final _methodChannel = const MethodChannel('dev.irondash_plus.engine_context');
 
   int? _engineHandle;
 
@@ -17,13 +17,15 @@ class EngineContext {
   ///
   /// Dart:
   /// ```dart
-  /// final handle = await EngineContext.instance.getEngineHandle();
+  /// final handle = await IrondashPlusEngineContext.instance.getEngineHandle();
   /// // pass the handle native code (i.e. through FFI).
   /// ```
   ///
   /// Native code:
   /// ```rust
-  /// let context = EngineContext::new().unwrap();
+  /// use irondash_plus_engine_context::IrondashPlusEngineContext;
+  ///
+  /// let context = IrondashPlusEngineContext::get().unwrap();
   /// let flutter_view = context.get_flutter_view(handle);
   /// let texture_registry = context.get_texture_registry(handle);
   /// ```

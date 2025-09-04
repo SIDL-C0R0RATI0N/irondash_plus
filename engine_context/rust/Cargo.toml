@@ -1,5 +1,5 @@
 [package]
-name = "irondash_engine_context"
+name = "irondash_plus_engine_context"
 version = "0.6.0"
 edition = "2021"
 license = "MIT"
@@ -21,3 +21,26 @@ log = "0.4"
 objc2 = "0.5.0"
 objc2-foundation = { version = "0.2.2", features = [ ] }
 core-foundation = "0.9"
+
+[target.'cfg(target_os = "android")'.build-dependencies]
+cc = "1.0"
+
+[build-dependencies]
+# on android we need to do this during build
+# because cargo doesn't seem to be able to pass these
+# linker arguments just for specific target.
+# It might be possible to do this with `RUSTFLAGS`, but
+# this works as well.
+cc = { version = "1.0", optional = true }
+
+[features]
+default = []
+
+[build]
+target = "aarch64-linux-android"
+
+[target.aarch64-linux-android.linker]
+name = "aarch64-linux-gnu-ld"
+
+[target.aarch64-linux-android]
+rustflags = ["-C", "link-arg=-Wl,--no-rosegment", "-C", "link-arg=-Wl,-z,max-page-size=16384"]

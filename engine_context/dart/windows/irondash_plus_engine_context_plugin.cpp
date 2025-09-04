@@ -1,4 +1,4 @@
-#include "irondash_engine_context_plugin.h"
+#include "irondash_plus_engine_context_plugin.h"
 
 // This must be included before many other Windows headers.
 #include <map>
@@ -11,7 +11,7 @@
 #include <flutter/plugin_registrar_windows.h>
 #include <flutter/standard_method_codec.h>
 
-namespace irondash_engine_context {
+namespace irondash_plus_engine_context {
 
 namespace {
 struct EngineContext {
@@ -64,7 +64,7 @@ private:
   std::vector<Callback> callbacks_;
 
   WNDCLASS RegisterWindowClass() {
-    window_class_name_ = L"EngineContextMiniRunLoop";
+    window_class_name_ = L"IrondashPlusEngineContextMiniRunLoop";
 
     WNDCLASS window_class{};
     window_class.hCursor = nullptr;
@@ -117,20 +117,19 @@ extern "C" BOOL WINAPI DllMain(HINSTANCE hinstDLL, DWORD fdwReason,
                                LPVOID lpvReserved) {
   switch (fdwReason) {
   case DLL_PROCESS_ATTACH:
-    fprintf(stderr, "P ATTACH\n");
     main_thread_id = GetCurrentThreadId();
     mini_run_loop = new MiniRunLoop();
   }
   return TRUE;
 }
 
-void PerformOnMainThread(void (*callback)(void *data), void *data) {
+void IrondashPlusEngineContextPerformOnMainThread(void (*callback)(void *data), void *data) {
   mini_run_loop->Schedule(callback, data);
 }
 
-DWORD GetMainThreadId() { return main_thread_id; }
+DWORD IrondashPlusEngineContextGetMainThreadId() { return main_thread_id; }
 
-size_t GetFlutterView(int64_t engine_handle) {
+size_t IrondashPlusEngineContextGetFlutterView(int64_t engine_handle) {
   auto context = contexts.find(engine_handle);
   if (context != contexts.end()) {
     return reinterpret_cast<size_t>(context->second.hwnd);
@@ -139,7 +138,7 @@ size_t GetFlutterView(int64_t engine_handle) {
   }
 }
 
-FlutterDesktopTextureRegistrarRef GetTextureRegistrar(int64_t engine_handle) {
+FlutterDesktopTextureRegistrarRef IrondashPlusEngineContextGetTextureRegistrar(int64_t engine_handle) {
   auto context = contexts.find(engine_handle);
   if (context != contexts.end()) {
     return context->second.texture_registrar;
@@ -148,7 +147,7 @@ FlutterDesktopTextureRegistrarRef GetTextureRegistrar(int64_t engine_handle) {
   }
 }
 
-FlutterDesktopMessengerRef GetBinaryMessenger(int64_t engine_handle) {
+FlutterDesktopMessengerRef IrondashPlusEngineContextGetBinaryMessenger(int64_t engine_handle) {
   auto context = contexts.find(engine_handle);
   if (context != contexts.end()) {
     return context->second.binary_messenger;
@@ -157,12 +156,12 @@ FlutterDesktopMessengerRef GetBinaryMessenger(int64_t engine_handle) {
   }
 }
 
-void RegisterDestroyNotification(EngineDestroyedCallback callback) {
+void IrondashPlusEngineContextRegisterDestroyNotification(EngineDestroyedCallback callback) {
   engine_destroyed_callbacks.push_back(callback);
 }
 
 // static
-void IrondashEngineContextPlugin::RegisterWithRegistrar(
+void IrondashPlusEngineContextPlugin::RegisterWithRegistrar(
     flutter::PluginRegistrarWindows *registrar,
     FlutterDesktopPluginRegistrarRef raw_registrar) {
 
@@ -179,10 +178,10 @@ void IrondashEngineContextPlugin::RegisterWithRegistrar(
 
   auto channel =
       std::make_unique<flutter::MethodChannel<flutter::EncodableValue>>(
-          registrar->messenger(), "dev.irondash.engine_context",
+          registrar->messenger(), "dev.irondash_plus.engine_context",
           &flutter::StandardMethodCodec::GetInstance());
 
-  auto plugin = std::make_unique<IrondashEngineContextPlugin>(handle);
+  auto plugin = std::make_unique<IrondashPlusEngineContextPlugin>(handle);
 
   channel->SetMethodCallHandler(
       [plugin_pointer = plugin.get()](const auto &call, auto result) {
@@ -192,10 +191,10 @@ void IrondashEngineContextPlugin::RegisterWithRegistrar(
   registrar->AddPlugin(std::move(plugin));
 }
 
-IrondashEngineContextPlugin::IrondashEngineContextPlugin(int64_t engine_handle)
+IrondashPlusEngineContextPlugin::IrondashPlusEngineContextPlugin(int64_t engine_handle)
     : engine_handle_(engine_handle) {}
 
-IrondashEngineContextPlugin::~IrondashEngineContextPlugin() {
+IrondashPlusEngineContextPlugin::~IrondashPlusEngineContextPlugin() {
   contexts.erase(engine_handle_);
   auto callbacks(engine_destroyed_callbacks);
   for (const auto &callback : callbacks) {
@@ -203,7 +202,7 @@ IrondashEngineContextPlugin::~IrondashEngineContextPlugin() {
   }
 }
 
-void IrondashEngineContextPlugin::HandleMethodCall(
+void IrondashPlusEngineContextPlugin::HandleMethodCall(
     const flutter::MethodCall<flutter::EncodableValue> &method_call,
     std::unique_ptr<flutter::MethodResult<flutter::EncodableValue>> result) {
   if (method_call.method_name().compare("getEngineHandle") == 0) {
@@ -213,4 +212,4 @@ void IrondashEngineContextPlugin::HandleMethodCall(
   }
 }
 
-} // namespace irondash_engine_context
+} // namespace irondash_plus_engine_context

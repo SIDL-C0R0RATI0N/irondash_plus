@@ -1,4 +1,4 @@
-#include "include/irondash_engine_context/irondash_engine_context_plugin.h"
+#include "include/irondash_plus_engine_context/irondash_plus_engine_context_plugin.h"
 
 #include <flutter_linux/flutter_linux.h>
 #include <gtk/gtk.h>
@@ -9,10 +9,10 @@
 #include <unistd.h>
 #include <vector>
 
-#define IRONDASH_ENGINE_CONTEXT_PLUGIN(obj)                                    \
+#define IRONDASH_PLUS_ENGINE_CONTEXT_PLUGIN(obj)                                    \
   (G_TYPE_CHECK_INSTANCE_CAST((obj),                                           \
-                              irondash_engine_context_plugin_get_type(),       \
-                              IrondashEngineContextPlugin))
+                              irondash_plus_engine_context_plugin_get_type(),       \
+                              IrondashPlusEngineContextPlugin))
 
 namespace {
 struct EngineContext {
@@ -32,9 +32,9 @@ __attribute__((constructor)) void Init() {
 
 extern "C" {
 
-size_t IrondashEngineContextGetMainThreadId() { return main_thread_id; }
+size_t IrondashPlusEngineContextGetMainThreadId() { return main_thread_id; }
 
-FlView *IrondashEngineContextGetFlutterView(int64_t engine_handle) {
+FlView *IrondashPlusEngineContextGetFlutterView(int64_t engine_handle) {
   auto context = contexts.find(engine_handle);
   if (context != contexts.end()) {
     return (context->second.view);
@@ -44,7 +44,7 @@ FlView *IrondashEngineContextGetFlutterView(int64_t engine_handle) {
 }
 
 FlBinaryMessenger *
-IrondashEngineContextGetBinaryMessenger(int64_t engine_handle) {
+IrondashPlusEngineContextGetBinaryMessenger(int64_t engine_handle) {
   auto context = contexts.find(engine_handle);
   if (context != contexts.end()) {
     return (context->second.binary_messenger);
@@ -54,7 +54,7 @@ IrondashEngineContextGetBinaryMessenger(int64_t engine_handle) {
 }
 
 FlTextureRegistrar *
-IrondashEngineContextGetTextureRegistrar(int64_t engine_handle) {
+IrondashPlusEngineContextGetTextureRegistrar(int64_t engine_handle) {
   auto context = contexts.find(engine_handle);
   if (context != contexts.end()) {
     return (context->second.texture_registrar);
@@ -63,23 +63,23 @@ IrondashEngineContextGetTextureRegistrar(int64_t engine_handle) {
   }
 }
 
-void IrondashEngineContextRegisterDestroyNotification(
+void IrondashPlusEngineContextRegisterDestroyNotification(
     EngineDestroyedCallback callback) {
   engine_destroyed_callbacks.push_back(callback);
 }
 }
 
-struct _IrondashEngineContextPlugin {
+struct _IrondashPlusEngineContextPlugin {
   GObject parent_instance;
   int64_t handle;
 };
 
-G_DEFINE_TYPE(IrondashEngineContextPlugin, irondash_engine_context_plugin,
+G_DEFINE_TYPE(IrondashPlusEngineContextPlugin, irondash_plus_engine_context_plugin,
               g_object_get_type())
 
 // Called when a method call is received from Flutter.
-static void irondash_engine_context_plugin_handle_method_call(
-    IrondashEngineContextPlugin *self, FlMethodCall *method_call) {
+static void irondash_plus_engine_context_plugin_handle_method_call(
+    IrondashPlusEngineContextPlugin *self, FlMethodCall *method_call) {
   g_autoptr(FlMethodResponse) response = nullptr;
 
   const gchar *method = fl_method_call_get_name(method_call);
@@ -94,35 +94,35 @@ static void irondash_engine_context_plugin_handle_method_call(
   fl_method_call_respond(method_call, response, nullptr);
 }
 
-static void irondash_engine_context_plugin_dispose(GObject *object) {
-  IrondashEngineContextPlugin *plugin = IRONDASH_ENGINE_CONTEXT_PLUGIN(object);
+static void irondash_plus_engine_context_plugin_dispose(GObject *object) {
+  IrondashPlusEngineContextPlugin *plugin = IRONDASH_PLUS_ENGINE_CONTEXT_PLUGIN(object);
   contexts.erase(plugin->handle);
   auto callbacks(engine_destroyed_callbacks);
   for (const auto &callback : callbacks) {
     callback(plugin->handle);
   }
-  G_OBJECT_CLASS(irondash_engine_context_plugin_parent_class)->dispose(object);
+  G_OBJECT_CLASS(irondash_plus_engine_context_plugin_parent_class)->dispose(object);
 }
 
-static void irondash_engine_context_plugin_class_init(
-    IrondashEngineContextPluginClass *klass) {
-  G_OBJECT_CLASS(klass)->dispose = irondash_engine_context_plugin_dispose;
+static void irondash_plus_engine_context_plugin_class_init(
+    IrondashPlusEngineContextPluginClass *klass) {
+  G_OBJECT_CLASS(klass)->dispose = irondash_plus_engine_context_plugin_dispose;
 }
 
 static void
-irondash_engine_context_plugin_init(IrondashEngineContextPlugin *self) {}
+irondash_plus_engine_context_plugin_init(IrondashPlusEngineContextPlugin *self) {}
 
 static void method_call_cb(FlMethodChannel *channel, FlMethodCall *method_call,
                            gpointer user_data) {
-  IrondashEngineContextPlugin *plugin =
-      IRONDASH_ENGINE_CONTEXT_PLUGIN(user_data);
-  irondash_engine_context_plugin_handle_method_call(plugin, method_call);
+  IrondashPlusEngineContextPlugin *plugin =
+      IRONDASH_PLUS_ENGINE_CONTEXT_PLUGIN(user_data);
+  irondash_plus_engine_context_plugin_handle_method_call(plugin, method_call);
 }
 
-void irondash_engine_context_plugin_register_with_registrar(
+void irondash_plus_engine_context_plugin_register_with_registrar(
     FlPluginRegistrar *registrar) {
-  IrondashEngineContextPlugin *plugin = IRONDASH_ENGINE_CONTEXT_PLUGIN(
-      g_object_new(irondash_engine_context_plugin_get_type(), nullptr));
+  IrondashPlusEngineContextPlugin *plugin = IRONDASH_PLUS_ENGINE_CONTEXT_PLUGIN(
+      g_object_new(irondash_plus_engine_context_plugin_get_type(), nullptr));
 
   plugin->handle = next_handle;
   ++next_handle;
@@ -137,7 +137,7 @@ void irondash_engine_context_plugin_register_with_registrar(
   g_autoptr(FlStandardMethodCodec) codec = fl_standard_method_codec_new();
   g_autoptr(FlMethodChannel) channel = fl_method_channel_new(
       fl_plugin_registrar_get_messenger(registrar),
-      "dev.irondash.engine_context", FL_METHOD_CODEC(codec));
+      "dev.irondash_plus.engine_context", FL_METHOD_CODEC(codec));
   fl_method_channel_set_method_call_handler(
       channel, method_call_cb, g_object_ref(plugin), g_object_unref);
 

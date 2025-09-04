@@ -1,3 +1,7 @@
+## 0.6.0
+
+- **FEAT**: [android] Add support for 16KB page size.
+
 ## 0.5.5
 
 - Update cargokit

@@ -1,7 +1,7 @@
-name: irondash_message_channel
-description: Dart interface to irondash MessageChannel.
+name: irondash_plus_message_channel
+description: Dart interface to irondash_plus MessageChannel.
 version: 0.7.0
-homepage: https://github.com/irondash/irondash
+homepage: https://github.com/SIDL-C0R0RATI0N/irondash_plus
 
 environment:
   sdk: '>=3.0.0 <4.0.0'

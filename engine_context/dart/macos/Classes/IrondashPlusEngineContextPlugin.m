@@ -1,4 +1,4 @@
-#import "EngineContextPlugin.h"
+#import "IrondashPlusEngineContextPlugin.h"
 
 #import <objc/message.h>
 
@@ -16,7 +16,7 @@
 
 @end
 
-@interface IrondashEngineContextPlugin () {
+@interface IrondashPlusEngineContextPlugin () {
   int64_t engineHandle;
 }
 @end
@@ -29,7 +29,7 @@
 
 @end
 
-@implementation IrondashEngineContextPlugin
+@implementation IrondashPlusEngineContextPlugin
 
 typedef void (^EngineDestroyedHandler)(int64_t);
 typedef void (*EngineDestroyedCallback)(int64_t);
@@ -48,8 +48,8 @@ static char associatedObjectKey;
 + (void)registerWithRegistrar:(NSObject<FlutterPluginRegistrar> *)registrar {
   int64_t engineHandle = nextHandle++;
 
-  IrondashEngineContextPlugin *instance =
-      [[IrondashEngineContextPlugin alloc] init];
+  IrondashPlusEngineContextPlugin *instance =
+      [[IrondashPlusEngineContextPlugin alloc] init];
   instance->engineHandle = engineHandle;
 
   // There is no destroy notification on macOS, so track the lifecycle of
@@ -76,7 +76,7 @@ static char associatedObjectKey;
   });
 
   FlutterMethodChannel *channel =
-      [FlutterMethodChannel methodChannelWithName:@"dev.irondash.engine_context"
+      [FlutterMethodChannel methodChannelWithName:@"dev.irondash_plus.engine_context"
                                   binaryMessenger:[registrar messenger]];
   [registrar addMethodCallDelegate:instance channel:channel];
 }

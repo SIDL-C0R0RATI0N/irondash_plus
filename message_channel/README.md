@@ -1,4 +1,4 @@
-# irondash_message_channel
+# irondash_plus_message_channel
 
 Rust-dart bridge similar to Flutter's platform channel.
 
@@ -11,7 +11,7 @@ to Flutter's platform channel.
     - Exactly one copy of binary data when calling Rust from Dart
 - Rust macros for automatic serialization and deserialization (similar to Serde but optimized for zero copy)
 - No code generation
-- Thread affinity - Rust channel counterpart is bound to thread on which the channel was created. You can have channels on platform thread or on any background thread as long as it's running a [RunLoop](https://github.com/irondash/irondash/tree/main/run_loop).
+- Thread affinity - Rust channel counterpart is bound to thread on which the channel was created. You can have channels on platform thread or on any background thread as long as it's running a [RunLoop](https://github.com/irondash_plus/irondash_plus/tree/main/run_loop).
 - Finalize handlers - Rust side can get notified when Dart object is garbage collected.
 - Async support
 
@@ -32,7 +32,7 @@ MessageChannelContext _initNativeContext() {
 
     // This function will be called by MessageChannel with opaque FFI
     // initialization data. From it you should call
-    // `irondash_init_message_channel_context` and do any other initialization,
+    // `irondash_plus_init_message_channel_context` and do any other initialization,
     // i.e. register rust method channel handlers.
     final function =
         dylib.lookup<NativeFunction<MessageChannelContextInitFunction>>(
@@ -53,11 +53,11 @@ _channel.setMethodCallHandler(...);
 Rust side:
 
 ```rust
-use irondash_message_channel::*;
+use irondash_plus_message_channel::*;
 
 #[no_mangle]
 pub extern "C" fn my_example_init_message_channel_context(data: *mut c_void) -> FunctionResult {
-    irondash_init_message_channel_context(data)
+    irondash_plus_init_message_channel_context(data)
 }
 ```
 
@@ -82,7 +82,7 @@ final res = await _channel.invokeMethod('someMethod', 'someArg');
 On Rust side, you can implement the `MethodHandler` trait for non-async version, or `AsyncMethodHandler` if you want to use async/await:
 
 ```rust
-use irondash_message_channel::*;
+use irondash_plus_message_channel::*;
 
 struct MyHandler {}
 
@@ -111,7 +111,7 @@ fn init() {
 Or async version:
 
 ```rust
-use irondash_message_channel::*;
+use irondash_plus_message_channel::*;
 
 struct MyHandler {}
 
@@ -141,7 +141,7 @@ fn init() {
 ### Calling Dart from Rust
 
 ```rust
-use irondash_message_channel::*;
+use irondash_plus_message_channel::*;
 
 struct MyHandler {
     invoker: Late<AsyncMethodInvoker>,
@@ -171,21 +171,21 @@ impl MethodHandler for MyHandler {
     // ...
 ```
 
-To see message channel in action look at the [example project](https://github.com/irondash/irondash/message_channel/dart/example).
+To see message channel in action look at the [example project](https://github.com/irondash_plus/irondash_plus/message_channel/dart/example).
 
 ## Threading consideration
 
-`MethodHandler` and `AsyncMethodHandler` are bound to thread on which they were created. The thread must be running a [RunLoop](https://github.com/irondash/irondash/tree/message_channel_example/run_loop). This is implicitely true for platform thread. To use channels on background threads, you need to create a `RunLoop` and run it yourself.
+`MethodHandler` and `AsyncMethodHandler` are bound to thread on which they were created. The thread must be running a [RunLoop](https://github.com/irondash_plus/irondash_plus/tree/message_channel_example/run_loop). This is implicitely true for platform thread. To use channels on background threads, you need to create a `RunLoop` and run it yourself.
 
 `MethodInvoker` is `Send`. It can be passed between threads and the response to method call will be received on same thread as the request was sent. Again, the thread must have a `RunLoop` running.
 
 ## Converting to and from Value
 
-[`Value`](https://github.com/irondash/irondash/blob/message_channel_example/message_channel/rust/src/value.rs) is represents all types that can be sent between Rust and Dart. To simplify serialization and deserialization on Rust side, `irondash_message_channel` provides `IntoValue` and `TryFromValue` proc macros, that generate [`TryInto<YourStruct>`](https://doc.rust-lang.org/std/convert/trait.TryInto.html) and [`From<YourStruct>`](https://doc.rust-lang.org/std/convert/trait.From.html) traits for `Value`. This is an optional feature:
+[`Value`](https://github.com/irondash_plus/irondash_plus/blob/message_channel_example/message_channel/rust/src/value.rs) is represents all types that can be sent between Rust and Dart. To simplify serialization and deserialization on Rust side, `irondash_plus_message_channel` provides `IntoValue` and `TryFromValue` proc macros, that generate [`TryInto<YourStruct>`](https://doc.rust-lang.org/std/convert/trait.TryInto.html) and [`From<YourStruct>`](https://doc.rust-lang.org/std/convert/trait.From.html) traits for `Value`. This is an optional feature:
 
 ```toml
 [dependencies]
-irondash_message_channel = { version = "0.8.0", features = ["derive"] }
+irondash_plus_message_channel = { version = "0.8.0", features = ["derive"] }
 ```
 
 ```rust
@@ -213,20 +213,20 @@ More advanced mapping options are also supported, for example:
 
 ```rust
 #[derive(IntoValue, TryFromValue)]
-#[irondash(tag = "t", content = "c")]
-#[irondash(rename_all = "UPPERCASE")]
+#[irondash_plus(tag = "t", content = "c")]
+#[irondash_plus(rename_all = "UPPERCASE")]
 enum Enum3CustomTagContent {
     Abc,
-    #[irondash(rename = "_Def")]
+    #[irondash_plus(rename = "_Def")]
     Def,
     SingleValue(i64),
-    #[irondash(rename = "_DoubleValue")]
+    #[irondash_plus(rename = "_DoubleValue")]
     DoubleValue(f64, f64),
     Xyz {
         x: i64,
         s: String,
         z1: Option<i64>,
-        #[irondash(skip_if_empty)]
+        #[irondash_plus(skip_if_empty)]
         z2: Option<i64>,
         z3: Option<f64>,
     },
