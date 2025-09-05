@@ -1,3 +1,7 @@
+## 0.6.1
+
+- Fixed an issue with plugin installation.
+
 ## 0.6.0
 
 - **FEAT**: [android] Add support for 16KB page size.

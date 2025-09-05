@@ -1,4 +1,4 @@
-package dev.irondash.engine_context;
+package dev.irondash_plus.engine_context;
 
 import android.app.Activity;
 import android.os.Handler;
@@ -24,11 +24,11 @@ import io.flutter.plugin.common.MethodChannel.MethodCallHandler;
 import io.flutter.plugin.common.MethodChannel.Result;
 import io.flutter.view.TextureRegistry;
 
-/** IrondashEngineContextPlugin */
+/** IrondashPlusEngineContextPlugin */
 // used from JNI
 @Keep
 @SuppressWarnings("UnusedDeclaration")
-public class IrondashEngineContextPlugin implements FlutterPlugin, MethodCallHandler, ActivityAware {
+public class IrondashPlusEngineContextPlugin implements FlutterPlugin, MethodCallHandler, ActivityAware {
   /// The MethodChannel that will the communication between Flutter and native Android
   ///
   /// This local reference serves to register the plugin with the Flutter Engine and unregister it
@@ -42,7 +42,7 @@ public class IrondashEngineContextPlugin implements FlutterPlugin, MethodCallHan
   public void onAttachedToEngine(@NonNull FlutterPluginBinding flutterPluginBinding) {
     handle = registry.registerPlugin(this);
     this.flutterPluginBinding = flutterPluginBinding;
-    channel = new MethodChannel(flutterPluginBinding.getBinaryMessenger(), "dev.irondash.engine_context");
+    channel = new MethodChannel(flutterPluginBinding.getBinaryMessenger(), "dev.irondash_plus.engine_context");
     channel.setMethodCallHandler(this);
   }
 
@@ -79,7 +79,7 @@ public class IrondashEngineContextPlugin implements FlutterPlugin, MethodCallHan
   }
 
   static public Activity getActivity(long handle) {
-    final IrondashEngineContextPlugin plugin = registry.getPlugin(handle);
+    final IrondashPlusEngineContextPlugin plugin = registry.getPlugin(handle);
     if (plugin != null && plugin.activityPluginBinding != null) {
       return plugin.activityPluginBinding.getActivity();
     } else {
@@ -97,7 +97,7 @@ public class IrondashEngineContextPlugin implements FlutterPlugin, MethodCallHan
   }
 
   static public BinaryMessenger getBinaryMessenger(long handle) {
-    final IrondashEngineContextPlugin plugin = registry.getPlugin(handle);
+    final IrondashPlusEngineContextPlugin plugin = registry.getPlugin(handle);
     if (plugin != null && plugin.flutterPluginBinding != null) {
       return plugin.flutterPluginBinding.getBinaryMessenger();
     } else {
@@ -106,7 +106,7 @@ public class IrondashEngineContextPlugin implements FlutterPlugin, MethodCallHan
   }
 
   static public TextureRegistry getTextureRegistry(long handle) {
-    final IrondashEngineContextPlugin plugin = registry.getPlugin(handle);
+    final IrondashPlusEngineContextPlugin plugin = registry.getPlugin(handle);
     if (plugin != null && plugin.flutterPluginBinding != null) {
       return plugin.flutterPluginBinding.getTextureRegistry();
     } else {
@@ -119,14 +119,14 @@ public class IrondashEngineContextPlugin implements FlutterPlugin, MethodCallHan
   }
 
   static class Registry {
-    long registerPlugin(IrondashEngineContextPlugin plugin) {
+    long registerPlugin(IrondashPlusEngineContextPlugin plugin) {
       final long res = nextHandle;
       ++nextHandle;
       plugins.put(res, plugin);
       return res;
     }
 
-    IrondashEngineContextPlugin getPlugin(long handle) {
+    IrondashPlusEngineContextPlugin getPlugin(long handle) {
       return plugins.get(handle);
     }
 
@@ -142,7 +142,7 @@ public class IrondashEngineContextPlugin implements FlutterPlugin, MethodCallHan
       }
     }
 
-    private final Map<Long, IrondashEngineContextPlugin> plugins = new HashMap<>();
+    private final Map<Long, IrondashPlusEngineContextPlugin> plugins = new HashMap<>();
     private final List<Notifier> destroyNotifiers = new ArrayList<>();
     private long nextHandle = 1;
   }
@@ -150,6 +150,6 @@ public class IrondashEngineContextPlugin implements FlutterPlugin, MethodCallHan
   private static final Registry registry = new Registry();
 
   static {
-    System.loadLibrary("irondash_engine_context_native");
+    System.loadLibrary("irondash_plus_engine_context_native");
   }
 }
